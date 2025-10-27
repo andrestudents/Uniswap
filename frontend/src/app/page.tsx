@@ -29,9 +29,9 @@ export default function Home() {
               Trade tokens instantly with minimal slippage
             </p>
           </header>
-
+          <br />
           {/* Swap Interface */}
-          <div className="flex justify-center">
+          <div className="flex justify-center ">
             <SwapInterface />
           </div>
         </div>

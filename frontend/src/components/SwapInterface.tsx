@@ -6,6 +6,7 @@ import { parseUnits, formatUnits, type Address } from 'viem';
 import { SIMPLE_SWAP_ADDRESS, TOKENS } from '@/constants/contracts';
 import SimpleSwapABI from '@/abis/SimpleSwap.json';
 import TestTokenABI from '@/abis/TestToken.json';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 export function SwapInterface() {
     const { address, isConnected } = useAccount();
@@ -116,6 +117,7 @@ export function SwapInterface() {
         }
     };
 
+    // If not connected
     if (!isConnected) {
         return (
             <div className="w-full max-w-md mx-auto">
@@ -162,6 +164,7 @@ export function SwapInterface() {
                     <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
                         From
                     </label>
+                    <br />
                     <div className="bg-gradient-to-br from-slate-700/40 to-slate-800/40 backdrop-blur-sm rounded-2xl p-4 border border-slate-600/30 group-hover:border-blue-500/50 transition-all duration-300">
                         <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center gap-3">
@@ -180,22 +183,26 @@ export function SwapInterface() {
                                 </p>
                             </div>
                         </div>
+                        <br />
                         <input
                             type="number"
                             value={amountIn}
                             onChange={(e) => setAmountIn(e.target.value)}
                             placeholder="0.0"
-                            className="w-full bg-transparent text-3xl text-white placeholder-slate-500 outline-none font-semibold"
+                            className="w-full bg-transparent text-3xl text-white  text-center placeholder-slate-500 outline-none font-semibold"
                         />
-                    </div>
-                    <button
-                        onClick={handleMax}
-                        className="absolute right-4 top-12 text-xs font-bold px-3 py-1 bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 rounded-lg border border-blue-500/20 hover:border-blue-500/50 transition-all duration-200"
-                    >
-                        MAX
-                    </button>
-                </div>
 
+                        {/* Max Balance Button */}
+                        <button
+                            onClick={handleMax}
+                            className="absolute right-4 top-12 text-xs font-bold px-3 py-1 bg-blue-600/20 hover:bg-blue-600/40 text-blue-300 rounded-lg border border-blue-500/20 hover:border-blue-500/50 transition-all duration-200"
+                        >
+                            MAX
+                        </button>
+                    </div>
+
+                </div>
+                <br />
                 {/* Swap Direction Button */}
                 <div className="flex justify-center -my-3 relative z-10 mb-4">
                     <button
@@ -241,18 +248,19 @@ export function SwapInterface() {
                     </div>
                 )}
 
+                <br />
+                <br />
+
                 {/* Swap Button */}
                 <button
                     onClick={handleSwap}
                     disabled={!amountIn || parseFloat(amountIn) <= 0 || isLoading}
-                    className={`w-full py-4 rounded-xl font-bold text-lg transition-all duration-300 transform relative overflow-hidden group ${isLoading
-                            ? 'bg-slate-600 text-slate-400 cursor-not-allowed'
-                            : !amountIn || parseFloat(amountIn) <= 0
-                                ? 'bg-slate-600 text-slate-400 cursor-not-allowed'
-                                : 'bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-500 hover:to-cyan-500 text-white hover:shadow-xl hover:shadow-blue-500/30 hover:scale-105 active:scale-95'
+                    className={`w-full py-4 rounded-lg font-semibold text-lg ${isLoading || !amountIn || parseFloat(amountIn) <= 0
+                        ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                        : 'bg-blue-500 text-white hover:bg-blue-600'
                         }`}
                 >
-                    <div className="relative z-10 flex items-center justify-center gap-2">
+                    <div className="flex items-center justify-center gap-2">
                         {isLoading && (
                             <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -264,6 +272,7 @@ export function SwapInterface() {
                 </button>
 
                 {/* Transaction Status */}
+                {/* Pending */}
                 {approveHash && (
                     <div className="mt-4 p-4 bg-blue-500/10 backdrop-blur-sm rounded-xl border border-blue-500/30 animate-pulse">
                         <div className="flex items-center gap-2">
@@ -272,7 +281,7 @@ export function SwapInterface() {
                         </div>
                     </div>
                 )}
-
+                {/* Success */}
                 {isApproveSuccess && step === 'approving' && (
                     <div className="mt-4 p-4 bg-green-500/10 backdrop-blur-sm rounded-xl border border-green-500/30">
                         <div className="flex items-center gap-2">
@@ -281,7 +290,7 @@ export function SwapInterface() {
                         </div>
                     </div>
                 )}
-
+                {/* Confirmed */}
                 {swapHash && (
                     <div className="mt-4 p-4 bg-cyan-500/10 backdrop-blur-sm rounded-xl border border-cyan-500/30">
                         <div className="flex items-center gap-2">
@@ -292,27 +301,49 @@ export function SwapInterface() {
                 )}
             </div>
 
+            {/* Bottom Spacer */}
+            <br />
+            <br />
+            <br />
+
             {/* Pool Info Card */}
-            <div className="mt-6 bg-gradient-to-br from-slate-800/40 to-slate-900/40 backdrop-blur-2xl rounded-2xl p-5 border border-slate-700/50">
-                <div className="flex items-center gap-2 mb-4">
-                    <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
-                    <h3 className="text-xs font-bold text-slate-300 uppercase tracking-widest">Pool Status</h3>
+            <div className="mt-6 rounded-2xl border border-slate-700/50 bg-gradient-to-br from-slate-800/40 to-slate-900/40 backdrop-blur-2xl p-6">
+                {/* Header - Centered */}
+                <div className="flex items-center justify-center gap-2 mb-6">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <h3 className="text-sm font-semibold uppercase tracking-widest text-slate-300 text-center">
+                        Pool Status
+                    </h3>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                    <div>
-                        <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">TKA Reserve</p>
-                        <p className="text-xl font-bold text-white">
-                            {parseFloat(reserveAFormatted).toLocaleString('en-US', { maximumFractionDigits: 0 })}
+
+                {/* Pool Data */}
+                <div className="grid grid-cols-2 gap-6">
+                    {/* Token A Reserve */}
+                    <div className="text-center">
+                        <p className="mb-1 text-xs uppercase tracking-wider text-slate-500">
+                            TKA Reserve
+                        </p>
+                        <p className="text-2xl font-bold text-white">
+                            {parseFloat(reserveAFormatted).toLocaleString("en-US", {
+                                maximumFractionDigits: 0,
+                            })}
                         </p>
                     </div>
-                    <div>
-                        <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">TKB Reserve</p>
-                        <p className="text-xl font-bold text-white">
-                            {parseFloat(reserveBFormatted).toLocaleString('en-US', { maximumFractionDigits: 0 })}
+
+                    {/* Token B Reserve */}
+                    <div className="text-center">
+                        <p className="mb-1 text-xs uppercase tracking-wider text-slate-500">
+                            TKB Reserve
+                        </p>
+                        <p className="text-2xl font-bold text-white">
+                            {parseFloat(reserveBFormatted).toLocaleString("en-US", {
+                                maximumFractionDigits: 0,
+                            })}
                         </p>
                     </div>
                 </div>
             </div>
+
         </div>
     );
 }
