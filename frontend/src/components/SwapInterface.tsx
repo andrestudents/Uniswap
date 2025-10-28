@@ -6,7 +6,8 @@ import { parseUnits, formatUnits, type Address } from 'viem';
 import { SIMPLE_SWAP_ADDRESS, TOKENS } from '@/constants/contracts';
 import SimpleSwapABI from '@/abis/SimpleSwap.json';
 import TestTokenABI from '@/abis/TestToken.json';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+import Link from "next/link";
+import { MyButton } from './MyButton';
 
 export function SwapInterface() {
     const { address, isConnected } = useAccount();
@@ -121,11 +122,24 @@ export function SwapInterface() {
     if (!isConnected) {
         return (
             <div className="w-full max-w-md mx-auto">
-                <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-3xl p-8 border border-slate-700/50 text-center">
-                    <div className="text-6xl mb-4">🔗</div>
+                <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-xl rounded-3xl p-8 border border-slate-700/50 text-center bg-slate-300">
+                    <div className="text-6xl mb-4">💀</div>
                     <p className="text-lg text-slate-300">Connect wallet to get started</p>
                 </div>
+                <br />
+                <div className="mt-6 flex justify-center">
+                    {/* Buatkan sebuah tombol/button yang nantinya akan redirect ke halaman yang saya inginkan */}
+                    <MyButton color="olive" size="md" className="hover:scale-105 rounded-lg transition-transform">
+                        <Link
+                            href="/try" // ganti dengan halaman tujuanmu
+                        // className="inline-block px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition-all duration-200"
+                        >
+                            GO TO TRY
+                        </Link>
+                    </MyButton>
+                </div>
             </div>
+
         );
     }
 
