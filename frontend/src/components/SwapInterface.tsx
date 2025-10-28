@@ -129,7 +129,7 @@ export function SwapInterface() {
                 <br />
                 <div className="mt-6 flex justify-center">
                     {/* Buatkan sebuah tombol/button yang nantinya akan redirect ke halaman yang saya inginkan */}
-                    <MyButton color="olive" size="md" className="hover:scale-105 rounded-lg transition-transform">
+                    <MyButton color="olive" size="xl" className="hover:scale-105 rounded-lg transition-transform">
                         <Link
                             href="/try" // ganti dengan halaman tujuanmu
                         // className="inline-block px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition-all duration-200"

@@ -14,39 +14,40 @@ export default function Try() {
             {/* Content */}
             <div className="flex items-center justify-center min-h-screen">
                 <div className="flex flex-col gap-6 items-center roun">
-                    <h1 className="text-3xl text-gray-400 opacity-50 mb-8">
-                        My Custom HeroUI Buttons
-                    </h1>
-
-                    {/* Your Custom MyButton */}
-                    <MyButton color="olive" size="xl" className="hover:scale-105 transition-transform rounded-full">
-                        My Custom Olive Button
-                    </MyButton>
-                    <div className="flex w-full flex-col">
+                    <div className="flex w-full flex-col ">
                         <Tabs aria-label="Options">
                             <Tab key="photos" title="Photos">
                                 <Card>
                                     <CardBody>
-                                        Lorem ipsum dolor sit amet
+                                        ASU
                                     </CardBody>
                                 </Card>
                             </Tab>
                             <Tab key="music" title="Music">
                                 <Card>
                                     <CardBody>
-                                        Ut enim ad minim veniam, quis nostrud
+                                        BAJINGAN
                                     </CardBody>
                                 </Card>
                             </Tab>
                             <Tab key="videos" title="Videos">
                                 <Card>
                                     <CardBody>
-                                        Excepteur sint occaecat cupidatat non
+                                        CELENG
                                     </CardBody>
                                 </Card>
                             </Tab>
                         </Tabs>
                     </div>
+                    <h1 className="text-3xl text-gray-400 opacity-50 mb-8">
+                        My Custom HeroUI Buttons
+                    </h1>
+                    {/* Your Custom MyButton */}
+                    <MyButton color="olive" size="xl" className="hover:scale-105 transition-transform rounded-full">
+                        My Custom Olive Button
+                    </MyButton>
+
+
                 </div>
             </div>
         </main>
