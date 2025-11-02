@@ -10,11 +10,21 @@ contract TestToken {
     mapping(address => uint256) public balanceOf;
     mapping(address => mapping(address => uint256)) public allowance;
 
+    // Faucet mappings
+    mapping(address => uint256) public lastFaucetTime;
+    uint256 public constant FAUCET_AMOUNT = 100 * 10 ** 18; // 100 tokens
+    uint256 public constant FAUCET_COOLDOWN = 1 days; // 24 hours cooldown
+
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(
         address indexed owner,
         address indexed spender,
         uint256 value
+    );
+    event FaucetClaimed(
+        address indexed user,
+        uint256 amount,
+        uint256 timestamp
     );
 
     constructor(
@@ -26,6 +36,33 @@ contract TestToken {
         symbol = _symbol;
         totalSupply = initialSupply * 10 ** uint256(decimals);
         balanceOf[msg.sender] = totalSupply;
+    }
+
+    // Faucet function - anyone can claim tokens
+    function faucet() external {
+        require(
+            block.timestamp >= lastFaucetTime[msg.sender] + FAUCET_COOLDOWN,
+            "Faucet cooldown not met. Wait 24 hours between claims."
+        );
+
+        lastFaucetTime[msg.sender] = block.timestamp;
+        balanceOf[msg.sender] += FAUCET_AMOUNT;
+        totalSupply += FAUCET_AMOUNT;
+
+        emit FaucetClaimed(msg.sender, FAUCET_AMOUNT, block.timestamp);
+        emit Transfer(address(0), msg.sender, FAUCET_AMOUNT);
+    }
+
+    // Check when user can claim again
+    function getNextFaucetTime(address user) external view returns (uint256) {
+        if (lastFaucetTime[user] == 0) {
+            return 0; // Can claim immediately
+        }
+        uint256 nextTime = lastFaucetTime[user] + FAUCET_COOLDOWN;
+        if (block.timestamp >= nextTime) {
+            return 0; // Can claim now
+        }
+        return nextTime - block.timestamp; // Seconds until next claim
     }
 
     function transfer(address to, uint256 value) public returns (bool) {
