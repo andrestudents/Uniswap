@@ -3,11 +3,11 @@
 import { useState, useEffect } from 'react';
 import { useAccount, useReadContract, useWriteContract, useWaitForTransactionReceipt, useBalance } from 'wagmi';
 import { parseUnits, formatUnits, type Address } from 'viem';
-import { SIMPLE_SWAP_ADDRESS, TOKENS } from '@/constants/contracts';
+import { SIMPLE_SWAP_ADDRESS } from '@/constants/contracts';
+import { TOKENS } from '@/constants/tokens';
 import SimpleSwapABI from '@/abis/SimpleSwap.json';
 import TestTokenABI from '@/abis/TestToken.json';
-import Link from "next/link";
-import { MyButton } from './MyButton';
+
 
 export function SwapInterface() {
     const { address, isConnected } = useAccount();

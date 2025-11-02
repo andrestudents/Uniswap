@@ -9,7 +9,6 @@ export default function TransactionPage() {
 
     const navItems = [
         { name: 'Dashboard', path: '/', icon: LayoutDashboard },
-        { name: 'Generate', path: '/generate', icon: Sparkles },
         { name: 'Transaction', path: '/transaction', icon: ArrowLeftRight },
         { name: 'Faucet', path: '/faucet', icon: Droplet },
     ];
