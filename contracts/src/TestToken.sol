@@ -1,26 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract TestToken {
-    string public name;
-    string public symbol;
-    uint8 public decimals = 18;
-    uint256 public totalSupply;
+import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
-    mapping(address => uint256) public balanceOf;
-    mapping(address => mapping(address => uint256)) public allowance;
-
+contract TestToken is ERC20, Ownable {
     // Faucet mappings
     mapping(address => uint256) public lastFaucetTime;
     uint256 public constant FAUCET_AMOUNT = 100 * 10 ** 18; // 100 tokens
     uint256 public constant FAUCET_COOLDOWN = 1 days; // 24 hours cooldown
 
-    event Transfer(address indexed from, address indexed to, uint256 value);
-    event Approval(
-        address indexed owner,
-        address indexed spender,
-        uint256 value
-    );
     event FaucetClaimed(
         address indexed user,
         uint256 amount,
@@ -31,11 +20,8 @@ contract TestToken {
         string memory _name,
         string memory _symbol,
         uint256 initialSupply
-    ) {
-        name = _name;
-        symbol = _symbol;
-        totalSupply = initialSupply * 10 ** uint256(decimals);
-        balanceOf[msg.sender] = totalSupply;
+    ) ERC20(_name, _symbol) Ownable(msg.sender) {
+        _mint(msg.sender, initialSupply * 10 ** decimals());
     }
 
     // Faucet function - anyone can claim tokens
@@ -46,11 +32,9 @@ contract TestToken {
         );
 
         lastFaucetTime[msg.sender] = block.timestamp;
-        balanceOf[msg.sender] += FAUCET_AMOUNT;
-        totalSupply += FAUCET_AMOUNT;
+        _mint(msg.sender, FAUCET_AMOUNT);
 
         emit FaucetClaimed(msg.sender, FAUCET_AMOUNT, block.timestamp);
-        emit Transfer(address(0), msg.sender, FAUCET_AMOUNT);
     }
 
     // Check when user can claim again
@@ -65,37 +49,8 @@ contract TestToken {
         return nextTime - block.timestamp; // Seconds until next claim
     }
 
-    function transfer(address to, uint256 value) public returns (bool) {
-        require(to != address(0), "Invalid address");
-        require(balanceOf[msg.sender] >= value, "Insufficient balance");
-
-        balanceOf[msg.sender] -= value;
-        balanceOf[to] += value;
-
-        emit Transfer(msg.sender, to, value);
-        return true;
-    }
-
-    function approve(address spender, uint256 value) public returns (bool) {
-        allowance[msg.sender][spender] = value;
-        emit Approval(msg.sender, spender, value);
-        return true;
-    }
-
-    function transferFrom(
-        address from,
-        address to,
-        uint256 value
-    ) public returns (bool) {
-        require(to != address(0), "Invalid address");
-        require(balanceOf[from] >= value, "Insufficient balance");
-        require(allowance[from][msg.sender] >= value, "Allowance exceeded");
-
-        balanceOf[from] -= value;
-        balanceOf[to] += value;
-        allowance[from][msg.sender] -= value;
-
-        emit Transfer(from, to, value);
-        return true;
+    // Optional: Allow owner to mint more tokens if needed
+    function mint(address to, uint256 amount) external onlyOwner {
+        _mint(to, amount);
     }
 }

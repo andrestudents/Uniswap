@@ -13,26 +13,38 @@ contract DeployScript is Script {
 
         // Deploy Token A
         TestToken tokenA = new TestToken("Token A", "TKA", 1000000);
+        console2.log("Token A deployed at:", address(tokenA));
 
         // Deploy Token B
         TestToken tokenB = new TestToken("Token B", "TKB", 1000000);
+        console2.log("Token B deployed at:", address(tokenB));
 
         // Deploy SimpleSwap
         SimpleSwap simpleSwap = new SimpleSwap(
             address(tokenA),
             address(tokenB)
         );
+        console2.log("SimpleSwap deployed at:", address(simpleSwap));
 
         // Approve and add initial liquidity
-        tokenA.approve(address(simpleSwap), 100000 * 10 ** 18);
-        tokenB.approve(address(simpleSwap), 100000 * 10 ** 18);
-        simpleSwap.addLiquidity(100000 * 10 ** 18, 100000 * 10 ** 18);
+        uint256 liquidityAmount = 100000 * 10 ** 18;
+
+        tokenA.approve(address(simpleSwap), liquidityAmount);
+        console2.log("Token A approved");
+
+        tokenB.approve(address(simpleSwap), liquidityAmount);
+        console2.log("Token B approved");
+
+        simpleSwap.addLiquidity(liquidityAmount, liquidityAmount);
+        console2.log("Initial liquidity added: 100,000 TKA and 100,000 TKB");
 
         vm.stopBroadcast();
 
-        // Log addresses
+        // Final summary
+        console2.log("\n=== DEPLOYMENT SUMMARY ===");
         console2.log("Token A:", address(tokenA));
         console2.log("Token B:", address(tokenB));
         console2.log("SimpleSwap:", address(simpleSwap));
+        console2.log("========================\n");
     }
 }
